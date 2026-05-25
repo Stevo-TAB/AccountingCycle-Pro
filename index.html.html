@@ -1,0 +1,1640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grade 11 Accounting - Periodic Merchandising System</title>
+    <title>Grade 11 Accounting - Periodic Merchandising System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/gh/chr15m/bugout/bugout.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        .tab-active { border-bottom: 3px solid #2563eb; color: #2563eb; font-weight: 700; }
+        .journal-row:hover { background-color: #f1f5f9; }
+        .accounting-table th { background-color: #1e293b; color: white; padding: 0.5rem; text-align: left; font-size: 0.875rem; }
+        .accounting-table td { border-bottom: 1px solid #e2e8f0; padding: 0.5rem; font-size: 0.875rem; }
+        .header-bg { background: linear-gradient(135deg, #1e293b 0%, #334155 100%); }
+        .status-pill { padding: 2px 10px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; transition: all 0.2s ease; }
+        input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        
+        .ws-col-fixed { 
+    width: 90px;     /* Increased from 75px */
+    min-width: 90px; 
+    text-align: right; 
+}
+#worksheetTable {
+    font-size: 13px !important; /* Forces the table font to be larger */
+}
+        .ws-account-col { width: 250px; min-width: 250px; }
+        
+        .inventory-input { background-color: #f0f9ff; border: 1px solid #bae6fd !important; text-align: right; width: 100%; font-weight: 400; }
+        .inventory-input:focus { outline: 2px solid #3b82f6; background-color: white; }
+
+        .indent-acc { padding-left: 2rem !important; }
+        .indent-lvl-1 { padding-left: 1.5rem; }
+        .indent-lvl-2 { padding-left: 3rem; }
+        
+        .opening-bal-input { 
+           background-color: #f8fafc;
+    border: 1px dashed #cbd5e1; 
+    text-align: right; 
+    width: 110px;    /* Increased from 100px */
+    font-size: 13px;  /* Increased from 11px */
+    padding: 3px 5px;
+    border-radius: 4px;
+}
+/* PASTE THE NEW LEDGER CSS HERE */
+#ledgerContainer h4 {
+    font-size: 1.15rem !important; 
+    color: #1e293b;
+}
+
+#ledgerContainer .opening-bal-input {
+    width: 130px; 
+    font-size: 1rem; 
+    padding: 5px;
+}
+
+#ledgerContainer .space-y-2, 
+#ledgerContainer .space-y-3 {
+    font-size: 1rem !important; 
+}
+        .opening-bal-input:focus { background-color: white; border-style: solid; border-color: #3b82f6; outline: none; }
+        
+        /* Financial Statement Layouts */
+        .stmt-table { width: 100%; border-collapse: collapse; font-family: 'Times New Roman', serif; }
+        .stmt-table td { padding: 2px 4px; vertical-align: bottom; }
+        .val-col { text-align: right; width: 100px; }
+        .border-t-black { border-top: 1px solid black; }
+        .border-b-double { border-bottom: 3px double black; }
+        .stmt-header { text-align: center; margin-bottom: 1.5rem; text-transform: uppercase; letter-spacing: 0.05em; font-family: 'Inter', sans-serif; }
+
+        @media print {
+            body { background: white; padding: 0; margin: 0; }
+            nav, header, button, .status-pill, .no-print, #validationMessage, #adjValidationMessage, .print-hide { display: none !important; }
+            main { box-shadow: none; padding: 0; width: 100%; }
+            .tab-content { display: none !important; }
+            .print-focus { display: block !important; margin: 0; padding: 0; width: 100% !important; }
+            .accounting-table th { color: black !important; background: #f1f5f9 !important; border: 1px solid #000; }
+            .accounting-table td { border: 1px solid #000; }
+            .bg-white { background: transparent !important; }
+            .grid { display: block !important; }
+            .stmt-double-underline { border-bottom: 3px double #000 !important; }
+            .overflow-x-auto { overflow: visible !important; }
+            table { width: 100% !important; table-layout: auto !important; }
+.header-actions {
+    display: flex;
+    gap: 0.75rem;
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+}
+
+.header-btn {
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.header-btn:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.header-btn-danger:hover {
+    background-color: #ef4444;
+    border-color: #ef4444;
+}
+
+/* Ensure the header container allows absolute positioning */
+header.header-bg {
+    position: relative;
+}
+
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <header class="header-bg text-white p-6 rounded-t-xl shadow-lg">
+        <h1 class="text-3xl font-bold">AccountingCycle Pro</h1>
+        <div class="flex justify-between items-center">
+            <p class="text-slate-300">Grade 11 (BAF3M) - Periodic Merchandising System</p>
+        </div>
+    </header>
+
+<nav class="bg-white border-b flex overflow-x-auto whitespace-nowrap mb-6 shadow-sm no-print">
+    <button onclick="switchTab('journal')" id="tab-journal" class="px-6 py-4 tab-active">General Journal</button>
+    <button onclick="switchTab('adjustments')" id="tab-adjustments" class="px-6 py-4">Adjustments</button>
+    <button onclick="switchTab('ledger')" id="tab-ledger" class="px-6 py-4">General Ledger</button>
+    <button onclick="switchTab('translist')" id="tab-translist" class="px-6 py-4">List of Transactions</button>
+    <button onclick="switchTab('worksheet')" id="tab-worksheet" class="px-6 py-4">8-Column Worksheet</button>
+    <button onclick="switchTab('statements')" id="tab-statements" class="px-6 py-4">Financial Statements</button>
+<div class="flex-grow"></div>
+    <div class="flex items-center gap-2 pr-2">
+        <select id="saveSelect" class="bg-slate-700 text-white text-xs rounded px-2 py-1 outline-none border border-slate-600">
+            <option value="">Select a save...</option>
+        </select>
+        <button onclick="saveProgress()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1 rounded text-xs font-bold">Save</button>
+        <button onclick="saveAsProgress()" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-xs font-bold">Save As...</button>
+        <button onclick="loadProgress()" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs font-bold">Load</button>
+        <button onclick="deleteSave()" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-xs font-bold mr-2">Delete</button>
+        
+        <button id="btnExportPDF" onclick="generateAccountingPDF()" class="bg-red-700 hover:bg-red-800 text-white px-3 py-1 rounded text-xs font-bold flex items-center gap-1 shadow-sm transition">
+    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+    Export PDF
+</button>
+    </div>
+</nav>
+    <main id="mainContainer" class="bg-white p-6 rounded-b-xl shadow-lg min-h-[600px]">
+        
+        <!-- GENERAL JOURNAL -->
+        <section id="section-journal" class="tab-content">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-4">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-800">General Journal</h2>
+                    <div id="journalBalanceStatus" class="status-pill inline-block mt-1 bg-slate-700 text-slate-300">Ready</div>
+                    <p id="editingIndicator" class="text-xs text-amber-600 font-bold hidden">Editing Existing Transaction...</p>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="addJournalRow()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded shadow text-sm font-semibold">+ Add Line</button>
+                    <button onclick="postTransaction()" id="postBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded shadow font-bold">Post Transaction</button>
+                    <button onclick="cancelEdit()" id="cancelEditBtn" class="bg-slate-200 hover:bg-slate-300 text-slate-700 px-4 py-2 rounded shadow text-sm font-semibold hidden">Cancel Edit</button>
+                    <button onclick="clearJournal()" class="bg-red-50 hover:text-red-600 text-red-400 px-4 py-2 rounded text-sm">Clear Form</button>
+                </div>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full accounting-table" id="journalTable">
+                    <thead>
+                        <tr><th style="width: 15%">Date</th><th style="width: 45%">Account Titles and Explanation</th><th style="width: 20%">DR ($)</th><th style="width: 20%">CR ($)</th></tr>
+                    </thead>
+                    <tbody id="journalBody"></tbody>
+                </table>
+            </div>
+            <div id="validationMessage" class="mt-4 p-4 rounded text-sm hidden"></div>
+        </section>
+
+        <!-- ADJUSTMENTS -->
+        <section id="section-adjustments" class="tab-content hidden">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-4">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-800">Adjusting Journal Entries</h2>
+                    <div id="adjBalanceStatus" class="status-pill inline-block mt-1 bg-slate-700 text-slate-300">Ready</div>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="addAdjustmentRow()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded shadow text-sm font-semibold">+ Add Line</button>
+                    <button onclick="postAdjustment()" class="bg-amber-600 hover:bg-amber-700 text-white px-6 py-2 rounded shadow font-bold">Post Adjusting Entry</button>
+                    <button onclick="clearAdjustments()" class="bg-red-50 hover:text-red-600 text-red-400 px-4 py-2 rounded text-sm">Clear Form</button>
+                </div>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full accounting-table" id="adjustmentsTable">
+                    <thead>
+                        <tr><th style="width: 15%">Date</th><th style="width: 45%">Account</th><th style="width: 20%">Adj. DR ($)</th><th style="width: 20%">Adj. CR ($)</th></tr>
+                    </thead>
+                    <tbody id="adjustmentsBody"></tbody>
+                </table>
+            </div>
+            <div id="adjValidationMessage" class="mt-4 p-4 rounded text-sm hidden"></div>
+        </section>
+
+        <!-- GENERAL LEDGER -->
+<section id="section-ledger" class="tab-content hidden">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4 border-b pb-4">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-800">General Ledger</h2>
+                    <div id="ledgerBalanceStatus" class="status-pill inline-block mt-1 bg-slate-700 text-slate-300">Ready</div>
+                </div>
+                
+                <div class="bg-slate-100 p-3 rounded-lg flex flex-wrap items-center gap-2 border border-slate-200 no-print">
+                    <span class="text-xs font-bold text-slate-700 uppercase">Create Custom Account:</span>
+                    <input type="text" id="newAccountName" placeholder="e.g., Vehicle Loan" class="p-1 text-sm border rounded bg-white">
+                    <select id="newAccountType" class="p-1 text-sm border rounded bg-white">
+                        <option value="Assets">Asset</option>
+                        <option value="Liabilities">Liability</option>
+                        <option value="Equity">Owner's Equity</option>
+                        <option value="Revenue">Revenue</option>
+                        <option value="Expenses">Expense</option>
+                    </select>
+                    <button onclick="createNewAccount()" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs font-bold shadow-sm transition">Add Account</button>
+                </div>
+            </div>
+            <div id="ledgerContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+        </section>
+
+        <!-- LIST OF TRANSACTIONS -->
+        <section id="section-translist" class="tab-content hidden">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold text-slate-800">List of Transactions</h2>
+                <div class="flex gap-2">
+                    <button onclick="downloadCSV('transactions')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1 rounded text-xs font-bold border">Save CSV</button>
+                    <button onclick="printSection('section-translist')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1 rounded text-xs font-bold border">Print</button>
+                </div>
+            </div>
+            <div class="overflow-x-auto border rounded-lg">
+                <table class="w-full accounting-table" id="transListTable">
+                    <thead>
+                        <tr><th style="width: 10%">Date</th><th style="width: 50%">Account / Description</th><th style="width: 15%">DR</th><th style="width: 15%">CR</th><th style="width: 10%" class="no-print">Action</th></tr>
+                    </thead>
+                    <tbody id="transListBody" class="bg-white"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- WORKSHEET -->
+        <section id="section-worksheet" class="tab-content hidden">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold text-slate-800">8-Column Worksheet</h2>
+                <div class="flex gap-2">
+                    <button onclick="downloadCSV('worksheet')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1 rounded text-xs font-bold border">Save CSV</button>
+                    <button onclick="printSection('section-worksheet')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1 rounded text-xs font-bold border">Print</button>
+                </div>
+            </div>
+            <div class="overflow-x-auto border rounded-lg">
+               <table class="w-full text-[11px] border-collapse min-w-[1200px] table-fixed" id="worksheetTable">
+
+<table class="w-full text-[11px] border-collapse min-w-[950px] table-fixed" id="worksheetTable">
+                    <thead class="bg-slate-800 text-white">
+                        <tr>
+                            <th rowspan="2" class="border border-slate-600 p-2 ws-account-col">Account Title</th>
+                            <th colspan="2" class="border border-slate-600 p-2 text-center bg-slate-700">Trial Balance</th>
+                            <th colspan="2" class="border border-slate-600 p-2 text-center bg-amber-700">Adjustments</th>
+                            <th colspan="2" class="border border-slate-600 p-2 text-center bg-emerald-700">Income Statement</th>
+                            <th colspan="2" class="border border-slate-600 p-2 text-center bg-blue-700">Balance Sheet</th>
+                        </tr>
+                        <tr>
+                            <th class="border border-slate-600 p-1 bg-slate-600 ws-col-fixed">DR</th><th class="border border-slate-600 p-1 bg-slate-600 ws-col-fixed">CR</th>
+                            <th class="border border-slate-600 p-1 bg-amber-600 ws-col-fixed">DR</th><th class="border border-slate-600 p-1 bg-amber-600 ws-col-fixed">CR</th>
+                            <th class="border border-slate-600 p-1 bg-emerald-600 ws-col-fixed">DR</th><th class="border border-slate-600 p-1 bg-emerald-600 ws-col-fixed">CR</th>
+                            <th class="border border-slate-600 p-1 bg-blue-600 ws-col-fixed">DR</th><th class="border border-slate-600 p-1 bg-blue-600 ws-col-fixed">CR</th>
+                        </tr>
+                    </thead>
+                    <tbody id="worksheetBody" class="bg-white"></tbody>
+                    <tfoot id="worksheetFoot" class="font-bold bg-slate-50"></tfoot>
+                </table>
+            </div>
+        </section>
+
+        <!-- FINANCIAL STATEMENTS -->
+        <section id="section-statements" class="tab-content hidden">
+            <div class="mb-6 bg-slate-50 p-4 rounded border border-slate-200 no-print">
+                <h3 class="text-sm font-bold text-slate-700 mb-4 uppercase">Statement Settings</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-500 mb-1">Company Name</label>
+                        <input type="text" id="inputCompanyName" placeholder="Enter Company Name" class="w-full p-2 border rounded text-sm focus:ring-2 focus:ring-blue-500" oninput="updateHeaders()">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-500 mb-1">Reporting Date</label>
+                        <input type="text" id="inputReportingDate" placeholder="e.g. December 31, 20XX" class="w-full p-2 border rounded text-sm focus:ring-2 focus:ring-blue-500" oninput="updateHeaders()">
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-between items-center mb-6 no-print">
+                <h2 class="text-xl font-bold text-slate-800">Financial Statements</h2>
+                <div class="flex gap-2">
+                    <button onclick="printSection('section-statements')" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded shadow font-bold">Print Statements</button>
+                </div>
+            </div>
+        <div class="flex flex-col gap-12">
+                <div id="trialBalancePrint" class="bg-white p-10 border rounded shadow-sm max-w-4xl mx-auto w-full hidden">
+                    <div class="stmt-header">
+                        <h3 class="font-bold text-xl uppercase stmt-company-name"></h3>
+                        <h4 class="font-semibold text-md">Trial Balance</h4>
+                        <p class="text-sm italic">As at <span class="stmt-date-label"></span></p>
+                    </div>
+                    <table class="w-full max-w-2xl mx-auto border-collapse text-sm stmt-table">
+                        <thead>
+                            <tr class="border-b-2 border-black text-left">
+                                <th class="p-1">Account</th><th class="p-1 text-right">Debit</th><th class="p-1 text-right">Credit</th>
+                            </tr>
+                        </thead>
+                        <tbody id="trialBalanceContent"></tbody>
+                    </table>
+                </div>
+
+                <div class="bg-white p-10 border rounded shadow-sm max-w-4xl mx-auto w-full" id="incomeStmtPrint">
+
+                <!-- Income Statement -->
+                <div class="bg-white p-10 border rounded shadow-sm max-w-4xl mx-auto w-full" id="incomeStmtPrint">
+                    <div class="stmt-header">
+                        <h3 id="headerCompanyIS" class="font-bold text-xl">[Company Name]</h3>
+                        <h4 class="font-semibold text-md">Income Statement</h4>
+                        <p id="headerDateIS" class="text-sm italic">For the Period Ended [Date]</p>
+                    </div>
+                    <table class="stmt-table" id="incomeStatementContent"></table>
+                </div>
+
+                <!-- Balance Sheet -->
+                <div class="bg-white p-10 border rounded shadow-sm max-w-5xl mx-auto w-full" id="balanceSheetPrint">
+                    <div class="stmt-header">
+                        <h3 id="headerCompanyBS" class="font-bold text-xl">[Company Name]</h3>
+                        <h4 class="font-semibold text-md">Balance Sheet</h4>
+                        <p id="headerDateBS" class="text-sm italic">As at [Date]</p>
+                    </div>
+                    <table class="stmt-table" id="balanceSheetContent"></table>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+    let ACCOUNTS = {
+            "Assets": ["Cash", "Accounts Receivable", "Supplies", "Prepaid Insurance", "Prepaid Rent", "Merchandise Inventory", "Land", "Buildings", "Accumulated Depreciation - Building", "Automobiles", "Accumulated Depreciation - Automobiles", "Equipment", "Accumulated Depreciation - Equipment", "Furniture", "Accumulated Depreciation - Furniture"],
+            "Liabilities": ["Accounts Payable", "HST Payable", "HST Recoverable", "Bank Loan", "Interest Payable", "Mortgage Payable"],
+            "Equity": ["Capital", "Drawings"],
+            "Revenue": ["Sales", "Sales Returns & Allowances", "Fees Earned", "Discounts Allowed", "Gain on Sale"],
+            "Expenses": ["Purchases", "Purchase Returns & Allowances", "Freight-in", "Salaries Expense", "Wages Expense", "Rent Expense", "Utilities Expense", "Supplies Expense", "Insurance Expense", "Advertising Expense", "Automobile Expense", "Bank Charges Expense", "Telephone Expense", "Taxes Expense", "Depreciation Expense - Building", "Depreciation Expense - Automobile", "Depreciation Expense - Equipment", "Depreciation Expense - Furniture", "Discounts Earned", "Loss on Sale", "Miscellaneous Expense"]
+        };
+
+        let FLAT_ACCOUNTS = Object.values(ACCOUNTS).flat();
+
+let currentSaveKey = null; // Track the currently loaded/saved file
+
+        let postedTransactions = [];
+let lastUsedDate = new Date().toLocaleDateString('en-CA'); // <--- Step 1 goes here
+
+// Helper to format values as currency
+function formatCurrency(amount, includeSymbol = false) {
+    // If it's zero or not a number, explicitly show 0.00
+    if (amount === 0 || isNaN(amount)) return '0.00';
+    
+    // Configures formatting with commas for thousands and two decimal places
+    const formatted = new Intl.NumberFormat('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    }).format(amount);
+
+    return includeSymbol ? `$ ${formatted}` : formatted;
+}
+        let adjustmentEntries = []; 
+        let openingBalances = {}; 
+// Helper to format values as currency
+function formatCurrency(amount, includeSymbol = false) {
+    if (amount === 0 || isNaN(amount)) return '0.00';
+    
+    // Configures formatting with commas for thousands and two decimal places
+    const formatted = new Intl.NumberFormat('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    }).format(amount);
+
+    return includeSymbol ? `$ ${formatted}` : formatted;
+}
+        FLAT_ACCOUNTS.forEach(a => openingBalances[a] = 0);
+
+        let editingId = null; 
+        let currentEntryLines = [];
+        let currentAdjLines = []; 
+        let beginningInventoryValue = 0;
+        let endingInventoryValue = 0;
+
+        window.onload = () => {
+            resetJournalForm();
+            resetAdjustmentsForm();
+            updateAll();
+        };
+
+    function updateHeaders() {
+            const company = document.getElementById('inputCompanyName').value || "[Company Name]";
+            const date = document.getElementById('inputReportingDate').value || "[Date]";
+            
+            // Updates Trial Balance Header text elements dynamically
+            const tbHeader = document.querySelector('#trialBalancePrint .stmt-header');
+            if (tbHeader) {
+                tbHeader.querySelector('.stmt-company-name').innerText = company;
+                tbHeader.querySelector('.stmt-date-label').innerText = date;
+            }
+
+            // Updates Income Statement and Balance Sheet elements
+            document.getElementById('headerCompanyIS').innerText = company;
+            document.getElementById('headerCompanyBS').innerText = company;
+            document.getElementById('headerDateIS').innerText = `For the Period Ended ${date}`;
+            document.getElementById('headerDateBS').innerText = `As at ${date}`;
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`section-${tabId}`).classList.remove('hidden');
+            document.querySelectorAll('nav button').forEach(el => el.classList.remove('tab-active'));
+            document.getElementById(`tab-${tabId}`).classList.add('tab-active');
+            updateAll();
+        }
+
+        function printSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (!section) return;
+            section.classList.add('print-focus');
+            window.print();
+            section.classList.remove('print-focus');
+        }
+
+        function getNormalOpeningSide(accName) {
+            if (ACCOUNTS.Assets.includes(accName)) {
+                return accName.includes("Accumulated Depreciation") ? "CR" : "DR";
+            }
+            if (ACCOUNTS.Liabilities.includes(accName)) {
+                return accName === "HST Recoverable" ? "DR" : "CR";
+            }
+            if (ACCOUNTS.Equity.includes(accName)) {
+                return accName === "Capital" ? "CR" : "DR";
+            }
+            if (ACCOUNTS.Revenue.includes(accName)) {
+                if (accName.includes("Sales Returns") || accName === "Discounts Allowed") return "DR";
+                return "CR";
+            }
+            if (ACCOUNTS.Expenses.includes(accName)) {
+                if (accName.includes("Purchase Returns") || accName === "Discounts Earned") return "CR";
+                return "DR";
+            }
+            return "DR";
+        }
+
+        function getAccountOptions() {
+            let options = '<option value="">Select Account</option>';
+            for (const category in ACCOUNTS) {
+                options += `<optgroup label="${category}">`;
+                ACCOUNTS[category].forEach(acc => options += `<option value="${acc}">${acc}</option>`);
+                options += `</optgroup>`;
+            }
+            return options;
+        }
+
+function createNewAccount() {
+    const nameInput = document.getElementById('newAccountName');
+    const typeSelect = document.getElementById('newAccountType');
+    
+    const accountName = nameInput.value.trim();
+    const accountType = typeSelect.value;
+
+    if (!accountName) {
+        alert("Please enter a valid name for the new account.");
+        return;
+    }
+
+    // Check if account name already exists anywhere across the system
+    if (FLAT_ACCOUNTS.includes(accountName)) {
+        alert(`The account "${accountName}" already exists.`);
+        return;
+    }
+
+    // 1. Inject the account name into the chosen classification category
+    ACCOUNTS[accountType].push(accountName);
+
+    // 2. Add it to the flat tracking index so lookup loops can see it
+    FLAT_ACCOUNTS.push(accountName);
+
+    // 3. Initialize its opening ledger balance slot to zero
+    openingBalances[accountName] = 0;
+
+    // 4. Clear input fields and refresh all application forms
+    nameInput.value = '';
+    
+    resetJournalForm();
+    resetAdjustmentsForm();
+    updateAll(); // Automatically draws the new GL Card, Worksheet row, etc.
+    
+    alert(`Successfully registered "${accountName}" under ${accountType}.`);
+}
+        // --- JOURNAL LOGIC ---
+        function resetJournalForm() {
+            document.getElementById('journalBody').innerHTML = '';
+            for(let i=0; i<4; i++) addJournalRow(null, i === 0);
+            syncJournal();
+        }
+
+function addJournalRow(data = null, isFirstLine = false) {
+    const tbody = document.getElementById('journalBody');
+    if (!isFirstLine && tbody.children.length === 0) isFirstLine = true;
+
+    let displayDate = "";
+    if (data && data.date) {
+        displayDate = data.date;
+    } else if (isFirstLine) {
+        displayDate = lastUsedDate;
+    }
+
+    // Safely pre-format existing loaded transaction values
+    const rawDr = parseFloat(data?.debit) || 0;
+    const rawCr = parseFloat(data?.credit) || 0;
+    const formattedDr = rawDr > 0 ? formatCurrency(rawDr, true) : '';
+    const formattedCr = rawCr > 0 ? formatCurrency(rawCr, true) : '';
+
+    const tr = document.createElement('tr');
+    tr.className = "journal-row";
+    tr.innerHTML = `
+        <td>
+            <input type="date" class="w-full border-none p-1 bg-transparent ${!isFirstLine ? 'hidden' : ''}" 
+                   onchange="syncJournal()" 
+                   value="${displayDate}">
+        </td>
+        <td><select class="w-full border rounded p-1 text-sm acc-select" onchange="syncJournal()">${getAccountOptions()}</select></td>
+        <td>
+            <input type="text" class="w-full border rounded p-1 text-right dr-input font-medium" 
+                   onchange="syncJournal()" 
+                   value="${formattedDr}" 
+                   placeholder="$ 0.00"
+                   onfocus="let v = parseFloat(this.value.replace(/[^0-9.]/g, '')) || 0; this.value = v > 0 ? v.toFixed(2) : '';"
+                   onblur="let v = parseFloat(this.value.replace(/[^0-9.]/g, '')) || 0; this.value = v > 0 ? formatCurrency(v, true) : ''; syncJournal();">
+        </td>
+        <td>
+            <input type="text" class="w-full border rounded p-1 text-right cr-input font-medium" 
+                   onchange="syncJournal()" 
+                   value="${formattedCr}" 
+                   placeholder="$ 0.00"
+                   onfocus="let v = parseFloat(this.value.replace(/[^0-9.]/g, '')) || 0; this.value = v > 0 ? v.toFixed(2) : '';"
+                   onblur="let v = parseFloat(this.value.replace(/[^0-9.]/g, '')) || 0; this.value = v > 0 ? formatCurrency(v, true) : ''; syncJournal();">
+        </td>
+    `;
+    if (data?.account) tr.querySelector('.acc-select').value = data.account;
+    tbody.appendChild(tr);
+}
+ function syncJournal() {
+    const rows = document.querySelectorAll('#journalBody tr');
+    let totalDr = 0, totalCr = 0, validLines = 0;
+    currentEntryLines = [];
+    const masterDate = rows[0]?.querySelector('input[type="date"]').value;
+
+    rows.forEach(row => {
+        const account = row.querySelector('.acc-select').value;
+        
+        // Cleanse currency formatting strings back to raw numeric text strings
+        const rawDrText = row.querySelector('.dr-input').value.replace(/[^0-9.]/g, '');
+        const rawCrText = row.querySelector('.cr-input').value.replace(/[^0-9.]/g, '');
+        
+        const debit = parseFloat(rawDrText) || 0;
+        const credit = parseFloat(rawCrText) || 0;
+        
+        if (account && (debit > 0 || credit > 0)) {
+            currentEntryLines.push({ date: masterDate, account, debit, credit });
+            totalDr += debit; totalCr += credit; validLines++;
+        }
+    });
+
+    const statusEl = document.getElementById('journalBalanceStatus');
+    const diff = Math.abs(totalDr - totalCr);
+    if (validLines === 0) {
+        statusEl.innerText = "Ready";
+        statusEl.className = "status-pill bg-slate-700 text-slate-300";
+    } else if (diff < 0.01 && totalDr > 0) {
+        statusEl.innerText = `Balanced: ${formatCurrency(totalDr, true)}`;
+        statusEl.className = "status-pill bg-green-600 text-white";
+    } else {
+        statusEl.innerText = `Unbalanced (${formatCurrency(diff, true)})`;
+        statusEl.className = "status-pill bg-red-600 text-white";
+    }
+}
+
+        // --- ADJUSTMENTS LOGIC ---
+        function resetAdjustmentsForm() {
+            document.getElementById('adjustmentsBody').innerHTML = '';
+            for(let i=0; i<4; i++) addAdjustmentRow(null, i === 0);
+            syncAdjUI();
+        }
+
+function addAdjustmentRow(data = null, isFirstLine = false) {
+    const tbody = document.getElementById('adjustmentsBody');
+    if (!isFirstLine && tbody.children.length === 0) isFirstLine = true;
+
+    let displayDate = "";
+    if (data && data.date) {
+        displayDate = data.date;
+    } else if (isFirstLine) {
+        displayDate = lastUsedDate; 
+    }
+
+    // Safely pre-format existing loaded adjustment values
+    const rawDr = parseFloat(data?.debit) || 0;
+    const rawCr = parseFloat(data?.credit) || 0;
+    const formattedDr = rawDr > 0 ? formatCurrency(rawDr, true) : '';
+    const formattedCr = rawCr > 0 ? formatCurrency(rawCr, true) : '';
+
+    const tr = document.createElement('tr');
+    tr.className = "journal-row";
+    tr.innerHTML = `
+        <td>
+            <input type="date" class="w-full border-none p-1 bg-transparent ${!isFirstLine ? 'hidden' : ''}" 
+                   onchange="syncAdjUI()" 
+                   value="${displayDate}">
+        </td>
+        <td><select class="w-full border rounded p-1 text-sm adj-acc-select" onchange="syncAdjUI()">${getAccountOptions()}</select></td>
+        <td>
+            <input type="text" class="w-full border rounded p-1 text-right adj-dr-input font-medium" 
+                   onchange="syncAdjUI()" 
+                   value="${formattedDr}" 
+                   placeholder="$ 0.00"
+                   onfocus="let v = parseFloat(this.value.replace(/[^0-9.]/g, '')) || 0; this.value = v > 0 ? v.toFixed(2) : '';"
+                   onblur="let v = parseFloat(this.value.replace(/[^0-9.]/g, '')) || 0; this.value = v > 0 ? formatCurrency(v, true) : ''; syncAdjUI();">
+        </td>
+        <td>
+            <input type="text" class="w-full border rounded p-1 text-right adj-cr-input font-medium" 
+                   onchange="syncAdjUI()" 
+                   value="${formattedCr}" 
+                   placeholder="$ 0.00"
+                   onfocus="let v = parseFloat(this.value.replace(/[^0-9.]/g, '')) || 0; this.value = v > 0 ? v.toFixed(2) : '';"
+                   onblur="let v = parseFloat(this.value.replace(/[^0-9.]/g, '')) || 0; this.value = v > 0 ? formatCurrency(v, true) : ''; syncAdjUI();">
+        </td>
+    `;
+    if (data?.account) tr.querySelector('.adj-acc-select').value = data.account;
+    tbody.appendChild(tr);
+}
+function syncAdjUI() {
+    const rows = document.querySelectorAll('#adjustmentsBody tr');
+    let totalDr = 0, totalCr = 0, validLines = 0;
+    currentAdjLines = [];
+    const masterDate = rows[0]?.querySelector('input[type="date"]').value;
+
+    rows.forEach(row => {
+        const account = row.querySelector('.adj-acc-select').value;
+        
+        // Cleanse currency formatting strings back to raw numeric text strings
+        const rawDrText = row.querySelector('.adj-dr-input').value.replace(/[^0-9.]/g, '');
+        const rawCrText = row.querySelector('.adj-cr-input').value.replace(/[^0-9.]/g, '');
+        
+        const debit = parseFloat(rawDrText) || 0;
+        const credit = parseFloat(rawCrText) || 0;
+        
+        if (account && (debit > 0 || credit > 0)) {
+            currentAdjLines.push({ date: masterDate, account, debit, credit });
+            totalDr += debit; totalCr += credit; validLines++;
+        }
+    });
+
+    const statusEl = document.getElementById('adjBalanceStatus');
+    const diff = Math.abs(totalDr - totalCr);
+    if (validLines === 0) {
+        statusEl.innerText = "Ready";
+        statusEl.className = "status-pill bg-slate-700 text-slate-300";
+    } else if (diff < 0.01 && totalDr > 0) {
+        statusEl.innerText = `Balanced: ${formatCurrency(totalDr, true)}`;
+        statusEl.className = "status-pill bg-green-600 text-white";
+    } else {
+        statusEl.innerText = `Unbalanced (${formatCurrency(diff, true)})`;
+        statusEl.className = "status-pill bg-red-600 text-white";
+    }
+}
+  function postAdjustment() {
+    // Capture the date from the first adjustments row before processing
+    const dateInput = document.querySelector('#adjustmentsBody input[type="date"]');
+    if (dateInput && dateInput.value) {
+        lastUsedDate = dateInput.value; // <-- Saves the date globally
+    }
+
+    let dr = currentAdjLines.reduce((s, c) => s + c.debit, 0);
+    let cr = currentAdjLines.reduce((s, c) => s + c.credit, 0);
+    if (currentAdjLines.length === 0) return;
+    if (!currentAdjLines[0].date) { showMsgAdj("Please select a date.", "red"); return; }
+    if (Math.abs(dr - cr) > 0.01) { showMsgAdj("Cannot post: Debits must equal Credits.", "red"); return; }
+
+    currentAdjLines.forEach(l => adjustmentEntries.push({...l}));
+    
+    const transObj = { id: Date.now(), date: currentAdjLines[0].date, lines: currentAdjLines.map(l => ({ ...l })), isAdjustment: true };
+    postedTransactions.push(transObj);
+    postedTransactions.sort((a,b) => new Date(a.date) - new Date(b.date));
+
+    resetAdjustmentsForm();
+    updateAll();
+    showMsgAdj("Adjusting entry posted successfully.", "green");
+}
+
+        // --- COMMON CORE ---
+        function updateOpeningBalance(acc, val) {
+            openingBalances[acc] = parseFloat(val) || 0;
+            if (acc === "Merchandise Inventory") {
+                beginningInventoryValue = openingBalances[acc];
+            }
+            updateAll();
+        }
+
+        function updateEndingInventory(val) {
+            endingInventoryValue = parseFloat(val) || 0;
+            updateAll();
+        }
+
+function postTransaction() {// Save the date from the first row before doing anything else
+    const dateInput = document.querySelector('#journalBody input[type="date"]');
+    if (dateInput && dateInput.value) {
+        lastUsedDate = dateInput.value;
+    }
+ let dr = currentEntryLines.reduce((s, c) => s + c.debit, 0);
+    let cr = currentEntryLines.reduce((s, c) => s + c.credit, 0);
+    if (currentEntryLines.length === 0) return;
+    if (!currentEntryLines[0].date) { showMsg("Please select a date.", "red"); return; }
+    if (Math.abs(dr - cr) > 0.01) { showMsg("Cannot post: Debits must equal Credits.", "red"); return; }
+
+    // If we are editing, keep the original adjustment status. 
+    // If it's a brand new entry from the journal tab, it is false.
+    const isAdj = editingId ? editingIsAdjustment : false;
+
+    const transObj = { 
+        id: editingId || Date.now(), 
+        date: currentEntryLines[0].date, 
+        lines: currentEntryLines.map(l => ({ ...l })), 
+        isAdjustment: isAdj 
+    };
+
+    if (editingId) {
+        const idx = postedTransactions.findIndex(t => t.id === editingId);
+        postedTransactions[idx] = transObj;
+        editingId = null;
+        editingIsAdjustment = false; // Reset for next time
+    } else {
+        postedTransactions.push(transObj);
+    }
+
+    postedTransactions.sort((a,b) => new Date(a.date) - new Date(b.date));
+    cancelEdit();
+    updateAll();
+    showMsg("Posted successfully.", "green");
+}
+
+// Add this variable near your other global variables (around line 215)
+let editingIsAdjustment = false; 
+
+function editTransaction(id) {
+    const trans = postedTransactions.find(t => t.id === id);
+    if (!trans) return;
+    
+    editingId = id;
+    editingIsAdjustment = trans.isAdjustment; // <--- ADD THIS LINE
+    switchTab('journal');
+    document.getElementById('journalBody').innerHTML = '';
+    trans.lines.forEach((l, idx) => addJournalRow({ date: trans.date, account: l.account, debit: l.debit, credit: l.credit }, idx === 0));
+    addJournalRow(null, false);
+    document.getElementById('editingIndicator').classList.remove('hidden');
+    document.getElementById('cancelEditBtn').classList.remove('hidden');
+    document.getElementById('postBtn').innerText = "Update Transaction";
+    syncJournal();
+}
+function cancelEdit() {
+    editingId = null;
+    editingIsAdjustment = false; // <--- ADD THIS LINE
+    document.getElementById('editingIndicator').classList.add('hidden');
+    document.getElementById('cancelEditBtn').classList.add('hidden');
+    document.getElementById('postBtn').innerText = "Post Transaction";
+    resetJournalForm();
+}
+
+        function showMsg(txt, color) {
+            const el = document.getElementById('validationMessage');
+            el.innerText = txt;
+            el.className = `mt-4 p-4 rounded text-sm bg-${color}-100 text-${color}-800`;
+            el.classList.remove('hidden');
+            setTimeout(() => el.classList.add('hidden'), 3000);
+        }
+
+        function showMsgAdj(txt, color) {
+            const el = document.getElementById('adjValidationMessage');
+            el.innerText = txt;
+            el.className = `mt-4 p-4 rounded text-sm bg-${color}-100 text-${color}-800`;
+            el.classList.remove('hidden');
+            setTimeout(() => el.classList.add('hidden'), 3000);
+        }
+
+        function updateAll() {
+            const totals = {};
+            FLAT_ACCOUNTS.forEach(a => {
+                const side = getNormalOpeningSide(a);
+                const signedOpen = side === "DR" ? openingBalances[a] : -openingBalances[a];
+                totals[a] = { open: signedOpen, journal: 0, adj: 0, side };
+            });
+
+            postedTransactions.forEach(t => {
+                t.lines.forEach(l => {
+                    if (t.isAdjustment) totals[l.account].adj += (l.debit - l.credit);
+                    else totals[l.account].journal += (l.debit - l.credit);
+                });
+            });
+
+            renderLedger(totals);
+            renderTransList();
+            renderWorksheet(totals);
+            renderStatements(totals);
+            updateHeaders();
+        }
+
+function renderLedger(totals) {
+    const container = document.getElementById('ledgerContainer');
+    container.innerHTML = '';
+    
+    let trialDR = 0;
+    let trialCR = 0;
+
+    FLAT_ACCOUNTS.forEach(acc => {
+        const data = totals[acc];
+        const finalBal = data.open + data.journal + data.adj;
+        
+        if (finalBal >= 0) trialDR += finalBal;
+        else trialCR += Math.abs(finalBal);
+
+        const displaySide = finalBal >= 0 ? 'DR' : 'CR';
+        const sideColor = finalBal >= 0 ? 'text-green-700' : 'text-red-700';
+
+        // --- Generate Transaction History Rows with formatted currency ---
+        let historyRows = '';
+        let hasHistory = false;
+
+        postedTransactions.forEach(t => {
+            t.lines.forEach(l => {
+                if (l.account === acc) {
+                    hasHistory = true;
+                    // Formatted with currency symbols inside the history rows
+                    const drText = l.debit > 0 ? formatCurrency(l.debit, true) : '';
+                    const crText = l.credit > 0 ? formatCurrency(l.credit, true) : '';
+                    const typeBadge = t.isAdjustment ? '<span class="text-[10px] bg-amber-100 text-amber-800 px-1 rounded">Adj</span>' : '';
+                    
+                    historyRows += `
+                        <tr class="text-xs hover:bg-slate-50">
+                            <td class="p-1 text-slate-500">${t.date}</td>
+                            <td class="p-1 text-right text-green-700 font-medium">${drText}</td>
+                            <td class="p-1 text-right text-red-700 font-medium">${crText}</td>
+                            <td class="p-1 text-center">${typeBadge}</td>
+                        </tr>
+                    `;
+                }
+            });
+        });
+
+        if (!hasHistory) {
+            historyRows = `<tr><td colspan="4" class="text-xs text-slate-400 italic text-center py-2">No transaction history</td></tr>`;
+        }
+
+        // Pre-format the raw balance data using your currency helper
+        const rawOpenVal = Math.abs(openingBalances[acc]);
+        const formattedOpenVal = rawOpenVal > 0 ? formatCurrency(rawOpenVal, true) : '';
+
+        const div = document.createElement('div');
+        div.className = "bg-white border-2 border-slate-200 rounded-xl p-5 shadow-md flex flex-col justify-between";
+        div.innerHTML = `
+            <div>
+                <div class="border-b-2 pb-2 mb-3">
+                    <h4 class="font-bold text-lg text-slate-800 truncate" title="${acc}">${acc}</h4>
+                </div>
+                <div class="space-y-3 flex-grow text-sm">
+                    <div class="flex justify-between items-center">
+                        <span class="text-slate-600 font-medium">Opening Balance (${data.side}):</span>
+                        <input type="text" 
+                            class="opening-bal-input !w-32 !text-sm !p-1" 
+                            value="${formattedOpenVal}" 
+                            placeholder="$ 0.00"
+                            onfocus="let v = parseFloat(this.value.replace(/[^0-9.]/g, '')) || 0; this.value = v > 0 ? v.toFixed(2) : '';"
+                            onblur="let v = parseFloat(this.value.replace(/[^0-9.]/g, '')) || 0; updateOpeningBalance('${acc}', v); this.value = v > 0 ? formatCurrency(v, true) : '';"
+                            onchange="let v = parseFloat(this.value.replace(/[^0-9.]/g, '')) || 0; updateOpeningBalance('${acc}', v);">
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-slate-500">Net Transactions:</span>
+                        <span class="font-semibold">${formatCurrency(Math.abs(data.journal), true)}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-amber-700">Net Adjustments:</span>
+                        <span class="text-amber-700 font-semibold">${formatCurrency(Math.abs(data.adj), true)}</span>
+                    </div>
+                </div>
+
+                <div class="mt-4 border border-slate-200 rounded-lg overflow-hidden bg-slate-50 no-print">
+                    <div class="bg-slate-200 px-2 py-1 text-xs font-bold text-slate-700">Account History</div>
+                    <div class="max-h-32 overflow-y-auto bg-white">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-slate-100 text-[11px] text-slate-500 font-semibold border-b">
+                                    <th class="p-1">Date</th>
+                                    <th class="p-1 text-right">DR</th>
+                                    <th class="p-1 text-right">CR</th>
+                                    <th class="p-1 text-center">Type</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${historyRows}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-4 pt-3 border-t-2 flex justify-between font-bold text-base">
+                <span>Final Balance:</span>
+                <span class="${sideColor}">${formatCurrency(Math.abs(finalBal), true)} ${displaySide}</span>
+            </div>
+        `;
+        container.appendChild(div);
+    });
+
+    const ledgerStatus = document.getElementById('ledgerBalanceStatus');
+    const diff = Math.abs(trialDR - trialCR);
+    if (trialDR === 0 && trialCR === 0) {
+        ledgerStatus.innerText = "Ready";
+        ledgerStatus.className = "status-pill bg-slate-700 text-slate-300";
+    } else if (diff < 0.01) {
+        ledgerStatus.innerText = `Ledger Balanced: ${formatCurrency(trialDR, true)}`;
+        ledgerStatus.className = "status-pill bg-green-600 text-white";
+    } else {
+        ledgerStatus.innerText = `Ledger Unbalanced (${formatCurrency(diff, true)})`;
+        ledgerStatus.className = "status-pill bg-red-600 text-white";
+    }
+}function renderTransList() {
+    const tbody = document.getElementById('transListBody');
+    if (!tbody) return;
+    tbody.innerHTML = '';
+
+    if (postedTransactions.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-400 italic bg-slate-50">No transactions posted yet. Go to General Journal or Adjustments to add records!</td></tr>`;
+        return;
+    }
+
+    postedTransactions.forEach(t => {
+        t.lines.forEach((l, idx) => {
+            const isFirstLine = idx === 0;
+            
+            // Core Change: Pass 'true' to include the $ symbol and commas
+            const drText = l.debit > 0 ? formatCurrency(l.debit, true) : '';
+            const crText = l.credit > 0 ? formatCurrency(l.credit, true) : '';
+            
+            // Format accounting row style indentation
+            const accountClass = l.credit > 0 ? 'indent-acc' : 'font-medium text-slate-800';
+            const badge = t.isAdjustment ? '<span class="text-[10px] bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded ml-2 font-bold uppercase tracking-wider">Adj</span>' : '';
+
+            const tr = document.createElement('tr');
+            tr.className = "border-b hover:bg-slate-50 transition-colors";
+            tr.innerHTML = `
+                <td class="p-2 text-slate-500 font-medium">${isFirstLine ? t.date : ''}</td>
+                <td class="p-2 ${accountClass}">${l.account} ${isFirstLine ? badge : ''}</td>
+                <td class="p-2 text-right text-green-700 font-medium">${drText}</td>
+                <td class="p-2 text-right text-red-700 font-medium">${crText}</td>
+                <td class="p-2 text-center no-print">
+                    ${isFirstLine ? `<button onclick="editTransaction(${t.id})" class="text-blue-600 hover:text-blue-800 font-bold text-xs bg-blue-50 px-2 py-1 rounded transition">Edit</button>` : ''}
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    });
+}
+function renderWorksheet(totals) {
+    const body = document.getElementById('worksheetBody');
+    body.innerHTML = '';
+    let sums = { tbDR: 0, tbCR: 0, adjDR: 0, adjCR: 0, isDR: 0, isCR: 0, bsDR: 0, bsCR: 0 };
+
+    FLAT_ACCOUNTS.forEach(acc => {
+        const data = totals[acc];
+        const preAdjBal = data.open + data.journal;
+        const finalBal = preAdjBal + data.adj;
+        
+      if (acc === "Merchandise Inventory") {
+            const invTB = openingBalances[acc]; 
+            sums.tbDR += invTB;
+            sums.isDR += beginningInventoryValue;
+            sums.isCR += endingInventoryValue;
+            sums.bsDR += endingInventoryValue;
+
+            // Format ending inventory string safely for initial display
+            const formattedEndingInv = endingInventoryValue > 0 ? formatCurrency(endingInventoryValue, true) : '';
+
+            // REMOVED SHADING: Changed from class="bg-blue-50" to match standard rows
+            body.innerHTML += `
+            <tr class="hover:bg-slate-50 text-xs">
+                <td class="border p-1 truncate font-medium">${acc}</td>
+                <td class="border p-1 text-right text-slate-600">${invTB > 0 ? formatCurrency(invTB, true) : ''}</td>
+                <td class="border p-1 text-right"></td>
+                <td class="border p-1 text-right"></td>
+                <td class="border p-1 text-right"></td>
+                <td class="border p-1 text-right text-blue-700 font-medium">${formatCurrency(beginningInventoryValue, true)}</td>
+                <td class="border p-0">
+                    <input type="text" class="inventory-input w-full h-full p-1 text-emerald-800 text-right font-semibold bg-transparent" 
+                        value="${formattedEndingInv}" 
+                        placeholder="$ 0.00"
+                        onfocus="let v = parseFloat(this.value.replace(/[^0-9.]/g, '')) || 0; this.value = v > 0 ? v.toFixed(2) : '';"
+                        onblur="let v = parseFloat(this.value.replace(/[^0-9.]/g, '')) || 0; updateEndingInventory(v); this.value = v > 0 ? formatCurrency(v, true) : '';">
+                </td>
+                <td class="border p-0">
+                    <input type="text" class="inventory-input w-full h-full p-1 text-blue-800 text-right font-semibold bg-transparent" 
+                        value="${formattedEndingInv}" 
+                        placeholder="$ 0.00"
+                        onfocus="let v = parseFloat(this.value.replace(/[^0-9.]/g, '')) || 0; this.value = v > 0 ? v.toFixed(2) : '';"
+                        onblur="let v = parseFloat(this.value.replace(/[^0-9.]/g, '')) || 0; updateEndingInventory(v); this.value = v > 0 ? formatCurrency(v, true) : '';">
+                </td>
+            </tr>`;
+            return;
+        }
+        
+        if (preAdjBal === 0 && data.adj === 0 && finalBal === 0) return;
+
+        const tbDR = preAdjBal > 0 ? preAdjBal : 0;
+        const tbCR = preAdjBal < 0 ? Math.abs(preAdjBal) : 0;
+        const adjDR = data.adj > 0 ? data.adj : 0;
+        const adjCR = data.adj < 0 ? Math.abs(data.adj) : 0;
+
+        const isRev = ACCOUNTS.Revenue.includes(acc);
+        const isExp = ACCOUNTS.Expenses.includes(acc);
+        const isAsset = ACCOUNTS.Assets.includes(acc);
+
+        let isDR = 0;
+        let isCR = 0;
+
+        if (isRev) {
+            if (finalBal > 0) isDR = finalBal;
+            else isCR = Math.abs(finalBal);
+        } else if (isExp) {
+            if (finalBal < 0) isCR = Math.abs(finalBal);
+            else isDR = finalBal;
+        }
+
+        let bsDR = (isAsset || acc === "Drawings" || acc === "HST Recoverable") ? (finalBal > 0 ? finalBal : 0) : 0;
+        let bsCR = (ACCOUNTS.Liabilities.includes(acc) || acc === "Capital") && acc !== "HST Recoverable" ? (finalBal < 0 ? Math.abs(finalBal) : 0) : 0;
+        
+        if (isAsset && finalBal < 0) bsCR = Math.abs(finalBal);
+
+        sums.tbDR += tbDR; sums.tbCR += tbCR; sums.adjDR += adjDR; sums.adjCR += adjCR;
+        sums.isDR += isDR; sums.isCR += isCR; sums.bsDR += bsDR; sums.bsCR += bsCR;
+
+        body.innerHTML += `
+            <tr class="hover:bg-slate-50 text-xs">
+                <td class="border p-1 truncate">${acc}</td>
+                <td class="border p-1 text-right text-slate-600">${tbDR ? formatCurrency(tbDR, true) : ''}</td>
+                <td class="border p-1 text-right text-slate-600">${tbCR ? formatCurrency(tbCR, true) : ''}</td>
+                <td class="border p-1 text-right text-amber-700 font-bold">${adjDR ? formatCurrency(adjDR, true) : ''}</td>
+                <td class="border p-1 text-right text-amber-700 font-bold">${adjCR ? formatCurrency(adjCR, true) : ''}</td>
+                <td class="border p-1 text-right text-blue-700">${isDR ? formatCurrency(isDR, true) : ''}</td>
+                <td class="border p-1 text-right text-blue-700">${isCR ? formatCurrency(isCR, true) : ''}</td>
+                <td class="border p-1 text-right text-emerald-700">${bsDR ? formatCurrency(bsDR, true) : ''}</td>
+                <td class="border p-1 text-right text-emerald-700">${bsCR ? formatCurrency(bsCR, true) : ''}</td>
+            </tr>`;
+    });
+
+    const netInc = sums.isCR - sums.isDR;
+    const foot = document.getElementById('worksheetFoot');
+    
+    foot.innerHTML = `
+        <tr class="bg-slate-100 font-bold"><td class="border p-1">Totals</td>
+            <td class="border p-1 text-right">${formatCurrency(sums.tbDR, true)}</td><td class="border p-1 text-right">${formatCurrency(sums.tbCR, true)}</td>
+            <td class="border p-1 text-right">${formatCurrency(sums.adjDR, true)}</td><td class="border p-1 text-right">${formatCurrency(sums.adjCR, true)}</td>
+            <td class="border p-1 text-right">${formatCurrency(sums.isDR, true)}</td><td class="border p-1 text-right">${formatCurrency(sums.isCR, true)}</td>
+            <td class="border p-1 text-right">${formatCurrency(sums.bsDR, true)}</td><td class="border p-1 text-right">${formatCurrency(sums.bsCR, true)}</td></tr>
+        <tr class="text-blue-700 bg-white font-bold"><td class="border p-1">Net Income / (Loss)</td><td colspan="4" class="border"></td>
+            <td class="border p-1 text-right">${netInc > 0 ? formatCurrency(netInc, true) : ''}</td>
+            <td class="border p-1 text-right">${netInc < 0 ? formatCurrency(Math.abs(netInc), true) : ''}</td>
+            <td class="border p-1 text-right">${netInc < 0 ? formatCurrency(Math.abs(netInc), true) : ''}</td>
+            <td class="border p-1 text-right">${netInc > 0 ? formatCurrency(netInc, true) : ''}</td></tr>`;
+}
+function renderStatements(totals) {
+    const getBal = (acc) => totals[acc].open + totals[acc].journal + totals[acc].adj;
+
+ // --- 1. TRIAL BALANCE LOGIC ---
+    let tbDrTotal = 0;
+    let tbCrTotal = 0;
+    let tbRows = '';
+
+    FLAT_ACCOUNTS.forEach(acc => {
+        const bal = getBal(acc);
+        if (Math.abs(bal) < 0.01) return;
+        if (bal > 0) {
+            tbDrTotal += bal;
+            tbRows += `<tr><td class="p-1 border-b border-slate-100">${acc}</td><td class="text-right p-1">$ ${bal.toFixed(2)}</td><td></td></tr>`;
+        } else {
+            const absBal = Math.abs(bal);
+            tbCrTotal += absBal;
+            tbRows += `<tr><td class="p-1 border-b border-slate-100">${acc}</td><td></td><td class="text-right p-1">$ ${absBal.toFixed(2)}</td></tr>`;
+        }
+    });
+
+    // Add totals row to Trial Balance
+    tbRows += `
+        <tr class="font-bold border-t-2 border-black">
+            <td class="p-1 text-right">Totals</td>
+            <td class="text-right p-1 border-b-4 border-double border-black">$ ${tbDrTotal.toFixed(2)}</td>
+            <td class="text-right p-1 border-b-4 border-double border-black">$ ${tbCrTotal.toFixed(2)}</td>
+        </tr>`;
+
+    const tbDiv = document.getElementById('trialBalancePrint');
+    tbDiv.classList.remove('hidden');
+    document.getElementById('trialBalanceContent').innerHTML = tbRows;
+
+    // === ADD THESE TWO NEW LINES RIGHT HERE ===
+    const company = document.getElementById('inputCompanyName').value || "[Company Name]";
+    const date = document.getElementById('inputReportingDate').value || "[Date]";
+    // ==========================================
+
+    // --- 2. INCOME STATEMENT LOGIC ---
+    const revSales = -getBal("Sales");
+    const revRet = getBal("Sales Returns & Allowances");
+    const revDisc = getBal("Discounts Allowed"); 
+    const netSales = revSales - revRet - revDisc; 
+
+    const purchases = getBal("Purchases");
+    const purRet = -getBal("Purchase Returns & Allowances");
+    const purDisc = -getBal("Discounts Earned"); 
+    const freight = getBal("Freight-in");
+    
+    const costOfGoodsAvailable = beginningInventoryValue + purchases - purRet - purDisc + freight;
+    const costOfGoodsSold = costOfGoodsAvailable - endingInventoryValue;
+    const grossProfit = netSales - costOfGoodsSold;
+    
+    const expenseList = ACCOUNTS.Expenses.filter(e => 
+        !["Purchases", "Purchase Returns & Allowances", "Freight-in", "Discounts Earned", "Discounts Allowed"].includes(e)
+    )
+    .map(e => ({ name: e, val: getBal(e) }))
+    .filter(e => e.val !== 0);
+    // DYNAMICALLY APPEND CUSTOM EXPENSES
+ACCOUNTS.Expenses.forEach(accName => {
+    // Only check accounts that are NOT already hardcoded in your standard layout
+    const isStandard = ["Purchases", "Purchase Returns & Allowances", "Freight-in", "Salaries Expense", "Wages Expense", "Rent Expense", "Utilities Expense", "Supplies Expense", "Insurance Expense", "Advertising Expense", "Automobile Expense", "Bank Charges Expense", "Telephone Expense", "Taxes Expense", "Depreciation Expense - Building", "Depreciation Expense - Automobile", "Depreciation Expense - Equipment", "Depreciation Expense - Furniture", "Discounts Earned", "Loss on Sale", "Miscellaneous Expense"].includes(accName);
+    
+    if (!isStandard) {
+        const val = getBal(accName);
+        if (val !== 0) {
+            expenseList.push({ name: accName, val: val });
+        }
+    }
+});
+    const totalExp = expenseList.reduce((s, c) => s + c.val, 0);
+    const netIncome = grossProfit - totalExp;
+
+    let isHtml = `
+        <tr><td class="font-bold">Revenue</td><td></td><td></td></tr>
+        <tr><td class="indent-lvl-1">Sales</td><td class="val-col">${formatCurrency(revSales, true)}</td><td></td></tr>
+        <tr><td class="indent-lvl-1">Less: Sales Returns & Allowances</td><td class="val-col">(${formatCurrency(revRet)})</td><td></td></tr>
+        <tr><td class="indent-lvl-1">Less: Discounts Allowed</td><td class="val-col border-b-black">(${formatCurrency(revDisc)})</td><td></td></tr>
+        <tr><td class="indent-lvl-1 font-bold">Net Sales</td><td></td><td class="val-col">${formatCurrency(netSales, true)}</td></tr>
+        
+        <tr><td class="font-bold pt-4">Cost of Goods Sold</td><td></td><td></td></tr>
+        <tr><td class="indent-lvl-1">Merchandise Inventory, Jan 1</td><td class="val-col">${formatCurrency(beginningInventoryValue, true)}</td><td></td></tr>
+        <tr><td class="indent-lvl-1">Purchases</td><td class="val-col">${formatCurrency(purchases)}</td><td></td></tr>
+        <tr><td class="indent-lvl-1">Less: Purchase Returns & Allowances</td><td class="val-col">(${formatCurrency(purRet)})</td><td></td></tr>
+        <tr><td class="indent-lvl-1">Less: Discounts Earned</td><td class="val-col">(${formatCurrency(purDisc)})</td><td></td></tr>
+        <tr><td class="indent-lvl-1">Add: Freight-in</td><td class="val-col border-b-black">${formatCurrency(freight)}</td><td></td></tr>
+        <tr><td class="indent-lvl-1">Cost of Goods Available for Sale</td><td class="val-col">${formatCurrency(costOfGoodsAvailable, true)}</td><td></td></tr>
+        <tr><td class="indent-lvl-1">Less: Merchandise Inventory, Dec 31</td><td class="val-col border-b-black">(${formatCurrency(endingInventoryValue)})</td><td></td></tr>
+        <tr><td class="indent-lvl-1 font-bold">Cost of Goods Sold</td><td></td><td class="val-col border-b-black">${formatCurrency(costOfGoodsSold)}</td></tr>
+        <tr><td class="font-bold">Gross Profit</td><td></td><td class="val-col">${formatCurrency(grossProfit, true)}</td></tr>
+        
+        <tr><td class="font-bold pt-4">Operating Expenses</td><td></td><td></td></tr>
+    `;
+
+    expenseList.forEach((e, i) => {
+        isHtml += `<tr><td class="indent-lvl-1">${e.name}</td><td class="val-col ${i === expenseList.length - 1 ? 'border-b-black' : ''}">${formatCurrency(e.val)}</td><td></td></tr>`;
+    });
+    isHtml += `
+        <tr><td class="indent-lvl-1">Total Operating Expenses</td><td></td><td class="val-col border-b-black">${formatCurrency(totalExp)}</td></tr>
+        <tr><td class="font-bold text-lg pt-4">NET INCOME / (LOSS)</td><td></td><td class="val-col font-bold border-b-double">${formatCurrency(netIncome, true)}</td></tr>
+    `;
+    document.getElementById('incomeStatementContent').innerHTML = isHtml;
+
+    // --- 3. BALANCE SHEET LOGIC ---
+    const currentAssets = [
+        { name: "Cash", val: getBal("Cash") },
+        { name: "Accounts Receivable", val: getBal("Accounts Receivable") },
+        { name: "Merchandise Inventory", val: endingInventoryValue },
+        { name: "Supplies", val: getBal("Supplies") },
+        { name: "Prepaid Insurance", val: getBal("Prepaid Insurance") },
+        { name: "Prepaid Rent", val: getBal("Prepaid Rent") }
+    ].filter(a => a.val !== 0);
+
+    const fixedAssets = [
+        { name: "Land", val: getBal("Land"), acc: 0 },
+        { name: "Buildings", val: getBal("Buildings"), acc: -getBal("Accumulated Depreciation - Building") },
+        { name: "Automobiles", val: getBal("Automobiles"), acc: -getBal("Accumulated Depreciation - Automobiles") },
+        { name: "Equipment", val: getBal("Equipment"), acc: -getBal("Accumulated Depreciation - Equipment") },
+        { name: "Furniture", val: getBal("Furniture"), acc: -getBal("Accumulated Depreciation - Furniture") }
+    ].filter(a => a.val !== 0);
+
+    const hstPayableVal = -getBal("HST Payable");
+    const hstRecoverableVal = getBal("HST Recoverable");
+    const currentLiabsList = [{ name: "Accounts Payable", val: -getBal("Accounts Payable") }, { name: "Interest Payable", val: -getBal("Interest Payable") }].filter(l => l.val !== 0);
+    const longLiabs = [{ name: "Bank Loan", val: -getBal("Bank Loan") }, { name: "Mortgage Payable", val: -getBal("Mortgage Payable") }].filter(l => l.val !== 0);
+// DYNAMICALLY APPEND CUSTOM ASSETS
+ACCOUNTS.Assets.forEach(accName => {
+    const isStandard = ["Cash", "Accounts Receivable", "Supplies", "Prepaid Insurance", "Prepaid Rent", "Merchandise Inventory", "Land", "Buildings", "Accumulated Depreciation - Building", "Automobiles", "Accumulated Depreciation - Automobiles", "Equipment", "Accumulated Depreciation - Equipment", "Furniture", "Accumulated Depreciation - Furniture"].includes(accName);
+    
+    if (!isStandard) {
+        const val = getBal(accName);
+        if (val !== 0) {
+            // Check if it's a new fixed asset or a current asset
+            if (accName.toLowerCase().includes("land") || accName.toLowerCase().includes("building") || accName.toLowerCase().includes("equipment") || accName.toLowerCase().includes("vehicle") || accName.toLowerCase().includes("automobile") || accName.toLowerCase().includes("furniture")) {
+                fixedAssets.push({ name: accName, val: val, acc: 0 });
+            } else if (accName.startsWith("Accumulated Depreciation")) {
+                // If they created a custom contra-account, match it with its respective fixed asset
+                let targetAsset = fixedAssets.find(f => accName.toLowerCase().includes(f.name.toLowerCase().replace(/s$/, '')));
+                if (targetAsset) {
+                    targetAsset.acc = -val;
+                }
+            } else {
+                currentAssets.push({ name: accName, val: val });
+            }
+        }
+    }
+});
+
+// DYNAMICALLY APPEND CUSTOM LIABILITIES
+ACCOUNTS.Liabilities.forEach(accName => {
+    const isStandard = ["Accounts Payable", "HST Payable", "HST Recoverable", "Bank Loan", "Interest Payable", "Mortgage Payable"].includes(accName);
+    
+    if (!isStandard) {
+        const val = -getBal(accName); // inverted for credit balance presentation
+        if (val !== 0) {
+            // Check if it's structural long term or current
+            if (accName.toLowerCase().includes("loan") || accName.toLowerCase().includes("mortgage") || accName.toLowerCase().includes("payable long")) {
+                longLiabs.push({ name: accName, val: val });
+            } else {
+                currentLiabsList.push({ name: accName, val: val });
+            }
+        }
+    }
+});
+    const capital = -getBal("Capital");
+    const drawings = getBal("Drawings");
+    const netEquityChange = netIncome - drawings;
+    const endingCapital = capital + netEquityChange;
+
+    let bsHtml = `
+        <tr><td colspan="4" class="font-bold text-lg border-b-2 border-black">ASSETS</td></tr>
+        <tr><td colspan="4" class="font-bold pt-2">Current Assets</td></tr>
+    `;
+    currentAssets.forEach((a, i) => {
+        bsHtml += `<tr><td class="indent-lvl-1">${a.name}</td><td></td><td class="val-col ${i === currentAssets.length - 1 ? 'border-b-black' : ''}">${i === 0 ? formatCurrency(a.val, true) : formatCurrency(a.val)}</td><td></td></tr>`;
+    });
+    const totalCurrAssets = currentAssets.reduce((s, c) => s + c.val, 0);
+    bsHtml += `<tr><td class="indent-lvl-1 font-bold">Total Current Assets</td><td></td><td></td><td class="val-col">${formatCurrency(totalCurrAssets, true)}</td></tr>`;
+    
+    bsHtml += `<tr><td colspan="4" class="font-bold pt-4">Fixed Assets</td></tr>`;
+    fixedAssets.forEach(f => {
+        if (f.acc !== 0) {
+            bsHtml += `
+                <tr><td class="indent-lvl-1">${f.name}</td><td class="val-col">${formatCurrency(f.val, true)}</td><td></td><td></td></tr>
+                <tr><td class="indent-lvl-1">Less: Accumulated Depreciation</td><td class="val-col border-b-black">(${formatCurrency(f.acc)})</td><td class="val-col">${formatCurrency(f.val - f.acc)}</td><td></td></tr>
+            `;
+        } else {
+            bsHtml += `<tr><td class="indent-lvl-1">${f.name}</td><td></td><td class="val-col">${formatCurrency(f.val)}</td><td></td></tr>`;
+        }
+    });
+    const totalFixedAssets = fixedAssets.reduce((s, c) => s + (c.val - c.acc), 0);
+    bsHtml += `<tr><td class="indent-lvl-1 font-bold">Total Fixed Assets</td><td></td><td></td><td class="val-col border-b-black">${formatCurrency(totalFixedAssets)}</td></tr>`;
+    const totalAssets = totalCurrAssets + totalFixedAssets;
+    bsHtml += `<tr><td class="font-bold">TOTAL ASSETS</td><td></td><td></td><td class="val-col font-bold border-b-double">${formatCurrency(totalAssets, true)}</td></tr>`;
+
+    bsHtml += `
+        <tr><td colspan="4" class="font-bold text-lg border-b-2 border-black pt-8">LIABILITIES</td></tr>
+        <tr><td colspan="4" class="font-bold pt-2">Current Liabilities</td></tr>
+    `;
+    currentLiabsList.forEach((l, i) => {
+        bsHtml += `<tr><td class="indent-lvl-1">${l.name}</td><td class="val-col">${i === 0 ? formatCurrency(l.val, true) : formatCurrency(l.val)}</td><td></td><td></td></tr>`;
+    });
+    const netHST = hstPayableVal - hstRecoverableVal;
+    bsHtml += `
+        <tr><td class="indent-lvl-1">HST Payable</td><td class="val-col">${currentLiabsList.length === 0 ? formatCurrency(hstPayableVal, true) : formatCurrency(hstPayableVal)}</td><td></td><td></td></tr>
+        <tr><td class="indent-lvl-1">Less: HST Recoverable</td><td class="val-col border-b-black">(${formatCurrency(hstRecoverableVal)})</td><td class="val-col border-b-black">${formatCurrency(netHST)}</td><td></td></tr>
+    `;
+    const totalCurrLiabs = currentLiabsList.reduce((s, c) => s + c.val, 0) + netHST;
+    bsHtml += `<tr><td class="indent-lvl-1 font-bold">Total Current Liabilities</td><td></td><td></td><td class="val-col">${formatCurrency(totalCurrLiabs, true)}</td></tr>`;
+    
+    let totalLongLiabs = 0;
+    if (longLiabs.length > 0) {
+        bsHtml += `<tr><td colspan="4" class="font-bold pt-4">Long-Term Liabilities</td></tr>`;
+        longLiabs.forEach((l, i) => {
+            bsHtml += `<tr><td class="indent-lvl-1">${l.name}</td><td></td><td class="val-col ${i === longLiabs.length - 1 ? 'border-b-black' : ''}">${formatCurrency(l.val)}</td><td></td></tr>`;
+        });
+        totalLongLiabs = longLiabs.reduce((s, c) => s + c.val, 0);
+        bsHtml += `<tr><td class="indent-lvl-1 font-bold">Total Long-Term Liabilities</td><td></td><td></td><td class="val-col border-b-black">${formatCurrency(totalLongLiabs)}</td></tr>`;
+    }
+    const totalLiabs = totalCurrLiabs + totalLongLiabs;
+    bsHtml += `<tr><td class="font-bold">TOTAL LIABILITIES</td><td></td><td></td><td class="val-col">${formatCurrency(totalLiabs, true)}</td></tr>`;
+
+    bsHtml += `
+        <tr><td colspan="4" class="font-bold text-lg border-b-2 border-black pt-8">OWNER'S EQUITY</td></tr>
+        <tr><td>Capital, Jan 1</td><td></td><td class="val-col">${formatCurrency(capital, true)}</td><td></td></tr>
+        <tr><td>Net Income</td><td class="val-col">${formatCurrency(netIncome)}</td><td></td><td></td></tr>
+        <tr><td>Less: Drawings</td><td class="val-col border-b-black">(${formatCurrency(drawings)})</td><td></td><td></td></tr>
+        <tr><td>Increase / (Decrease) in Equity</td><td></td><td class="val-col border-b-black">${formatCurrency(netEquityChange)}</td><td></td></tr>
+        <tr><td class="font-bold">Capital, Dec 31</td><td></td><td></td><td class="val-col border-b-black">${formatCurrency(endingCapital, true)}</td></tr>
+     <tr><td class="font-bold">TOTAL LIABILITIES & EQUITY</td><td></td><td></td><td class="val-col font-bold border-b-double">$ ${(totalLiabs + endingCapital).toFixed(2)}</td></tr>
+    `;
+    document.getElementById('balanceSheetContent').innerHTML = bsHtml;
+
+    // === START OF STEP 3 REPLACEMENT CODE ===
+    // Update Company/Date Labels for all three headers
+    const currentCompany = document.getElementById('inputCompanyName').value || "[Company Name]";
+    const currentDate = document.getElementById('inputReportingDate').value || "[Date]";
+    
+    // Updates Trial Balance Header text elements
+    const tbHeader = document.querySelector('#trialBalancePrint .stmt-header');
+    if (tbHeader) {
+        tbHeader.querySelector('.stmt-company-name').innerText = currentCompany;
+        tbHeader.querySelector('.stmt-date-label').innerText = currentDate;
+    }
+
+    // Updates Income Statement and Balance Sheet elements
+    document.getElementById('headerCompanyIS').innerText = currentCompany;
+    document.getElementById('headerCompanyBS').innerText = currentCompany;
+    document.getElementById('headerDateIS').innerText = `For the Period Ended ${currentDate}`;
+    document.getElementById('headerDateBS').innerText = `As at ${currentDate}`;
+}
+
+        function clearJournal() {
+            if (confirm("Are you sure you want to clear the journal form?")) {
+                resetJournalForm();
+            }
+        }
+
+        function clearAdjustments() {
+            if (confirm("Are you sure you want to clear the adjustments form?")) {
+                resetAdjustmentsForm();
+            }
+        }
+ // --- SAVING & LOADING SYSTEM ---
+
+// Populate the dropdown menu
+function updateSaveList() {
+    const select = document.getElementById('saveSelect');
+    if (!select) return;
+    select.innerHTML = '<option value="">Select Save...</option>';
+    
+    for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith("AccSave_")) {
+            const displayName = key.replace("AccSave_", "");
+            const option = document.createElement('option');
+            option.value = key;
+            option.textContent = displayName;
+            select.appendChild(option);
+        }
+    }
+}
+
+// SAVE: Overwrites the active file without a prompt
+function saveProgress() {
+    if (!currentSaveKey) {
+        alert("No file is currently open. Please create a new file or load an existing one first.");
+        return;
+    }
+
+    const data = {
+        companyName: document.getElementById('inputCompanyName').value,
+        reportingDate: document.getElementById('inputReportingDate').value,
+        postedTransactions,
+        openingBalances,
+        beginningInventoryValue,
+        endingInventoryValue,
+        customACCOUNTS: ACCOUNTS // <-- Added to save your accounts
+    };
+
+    localStorage.setItem(currentSaveKey, JSON.stringify(data));
+    alert(`Progress saved successfully to "${currentSaveKey.replace("AccSave_", "")}".`);
+}
+
+function loadProgress() {
+    const key = document.getElementById('saveSelect').value;
+    if (!key) {
+        alert("Please select a file from the dropdown first.");
+        return;
+    }
+
+    if (confirm("Load this file? Current unsaved work will be lost.")) {
+        const data = JSON.parse(localStorage.getItem(key));
+        
+        // --- Restore custom account lists first ---
+        if (data.customACCOUNTS) {
+            ACCOUNTS = data.customACCOUNTS;
+            FLAT_ACCOUNTS = Object.values(ACCOUNTS).flat();
+        }
+        // ------------------------------------------
+
+        postedTransactions = data.postedTransactions || [];
+        openingBalances = data.openingBalances || {};
+        beginningInventoryValue = data.beginningInventoryValue || 0;
+        endingInventoryValue = data.endingInventoryValue || 0;
+        
+        document.getElementById('inputCompanyName').value = data.companyName || "";
+        document.getElementById('inputReportingDate').value = data.reportingDate || "";
+        
+        currentSaveKey = key; 
+        
+        // Rebuild layout dropdown options using the newly loaded accounts
+        resetJournalForm();
+        resetAdjustmentsForm();
+        
+        updateAll();
+        alert("File loaded successfully.");
+    }
+}
+
+function deleteSave() {
+    const key = document.getElementById('saveSelect').value;
+    if (!key) return;
+    
+    if (confirm(`Are you sure you want to delete "${key.replace("AccSave_", "")}"?`)) {
+        localStorage.removeItem(key);
+        if (currentSaveKey === key) currentSaveKey = null;
+        updateSaveList();
+    }
+}
+
+// Ensure the list updates when the page loads
+window.addEventListener('DOMContentLoaded', () => {
+    updateSaveList();
+
+    // Setup the "Create New File" click button listener
+    document.getElementById('btnCreateSave').addEventListener('click', () => {
+        const name = document.getElementById('newSaveName').value.trim();
+        if (!name) {
+            alert("Please enter a workbook name.");
+            return;
+        }
+
+        const key = "AccSave_" + name;
+        if (localStorage.getItem(key)) {
+            alert("A workbook with this name already exists.");
+            return;
+        }
+
+        // Fresh ledger history details for the new workbook file
+        postedTransactions = [];
+        openingBalances = {};
+        beginningInventoryValue = 0;
+        endingInventoryValue = 0;
+
+        const data = {
+            companyName: name,
+            reportingDate: "",
+            postedTransactions,
+            openingBalances,
+            beginningInventoryValue,
+            endingInventoryValue,
+            customACCOUNTS: ACCOUNTS // <-- Ensures new workbooks carry forward your account rules!
+        };
+
+        localStorage.setItem(key, JSON.stringify(data));
+        currentSaveKey = key;
+
+        updateSaveList();
+        document.getElementById('saveSelect').value = key;
+        document.getElementById('newSaveName').value = "";
+
+        resetJournalForm();
+        resetAdjustmentsForm();
+        updateAll();
+
+        alert(`New workbook file "${name}" created successfully.`);
+
+    });
+});
+</script>
+<script>
+function generateAccountingPDF() {
+    // 1. FIXED: Correctly grab active text strings from your matching HTML input elements
+    const companyName = document.getElementById('companyName')?.value.trim() || "Accounting Workbook";
+    const reportingDate = document.getElementById('reportingDate')?.value.trim() || "Financial Period";
+    
+    // 2. Form an off-screen compilation div layout box
+    const element = document.createElement('div');
+    element.className = "p-8 bg-white space-y-12";
+    
+    // Compile a professional cover title header zone
+    element.innerHTML = `
+        <div style="text-align: center; border-bottom: 2px solid #1e293b; padding-bottom: 1.5rem; margin-bottom: 2rem;">
+            <h1 style="font-size: 24px; font-weight: bold; font-family: sans-serif; color: #1e293b; margin: 0; text-transform: uppercase;">${companyName}</h1>
+            <h2 style="font-size: 16px; font-weight: 600; color: #475569; margin-top: 4px; font-family: sans-serif;">Complete Financial Statement Package</h2>
+            <p style="font-size: 13px; color: #64748b; margin-top: 4px; font-style: italic; font-family: sans-serif;">Reporting Period: ${reportingDate}</p>
+            <p style="font-size: 11px; color: #94a3b8; margin-top: 2px; font-family: sans-serif;">Generated on: ${new Date().toLocaleDateString()}</p>
+        </div>
+    `;
+
+    // 3. Map ONLY the 3 exact views requested (No Journal inputs)
+    const sectionsToGather = [
+        { id: 'section-translist', title: 'List of Ledger Transactions' },
+        { id: 'section-worksheet', title: 'Accounting 8-Column Worksheet' },
+        { id: 'section-statements', title: 'Core Financial Reports' }
+    ];
+
+    // 4. Duplicate the live panels into our temporary memory canvas
+    sectionsToGather.forEach(item => {
+        const rawTarget = document.getElementById(item.id);
+        if (rawTarget) {
+            const blockWrapper = document.createElement('div');
+            blockWrapper.className = "pdf-report-section mb-8";
+            blockWrapper.innerHTML = `<h3 style="font-size: 14px; font-weight: bold; color: #334155; border-bottom: 1px solid #cbd5e1; padding-bottom: 4px; margin-bottom: 12px; text-transform: uppercase; font-family: sans-serif;">${item.title}</h3>`;
+            
+            // Clone node elements
+            const displayClone = rawTarget.cloneNode(true);
+            
+            // Force hidden structures to open so background tabs render accurately
+            displayClone.classList.remove('hidden');
+            
+            // Strip operational elements (search, setting bars, control buttons) from printing out
+            displayClone.querySelectorAll('.no-print, button, input, select, .mb-6, .mb-4').forEach(el => {
+                if (el.id !== 'companyName' && el.id !== 'reportingDate') {
+                    el.style.display = 'none';
+                }
+            });
+            
+            blockWrapper.appendChild(displayClone);
+            element.appendChild(blockWrapper);
+            
+            // Inject structural layout page break points
+            const structuralBreak = document.createElement('div');
+            structuralBreak.className = "html2pdf__page-break";
+            element.appendChild(structuralBreak);
+        }
+    });
+
+    // 5. Establish engine settings (Landscape is critical for 8-column rows)
+    const pdfSettings = {
+        margin:       [0.4, 0.4, 0.4, 0.4], 
+        filename:     `${companyName.replace(/\s+/g, '_')}_Financials.pdf`,
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2, useCORS: true, logging: false },
+        jsPDF:        { unit: 'in', format: 'letter', orientation: 'landscape' }
+    };
+
+    // 6. Execute download rendering window pipeline
+    document.body.appendChild(element);
+    html2pdf().set(pdfSettings).from(element).save().then(() => {
+        document.body.removeChild(element);
+    }).catch(err => {
+        console.error("PDF Export Engine error:", err);
+        document.body.removeChild(element);
+    });
+}
+</script>
+<script>
+function generateAccountingPDF() {
+    // 1. Gather active inputs safely from the statement setup panel
+    const companyName = document.getElementById('inputCompanyName')?.value.trim() || "Accounting Workbook";
+    const reportingDate = document.getElementById('inputReportingDate')?.value.trim() || "Financial Period";
+    
+    // 2. Build staging area in browser memory
+    const element = document.createElement('div');
+    element.className = "p-8 bg-white space-y-12";
+    
+    element.innerHTML = `
+        <div style="text-align: center; border-bottom: 2px solid #1e293b; padding-bottom: 1.5rem; margin-bottom: 2rem;">
+            <h1 style="font-size: 24px; font-weight: bold; font-family: sans-serif; color: #1e293b; margin: 0; text-transform: uppercase;">${companyName}</h1>
+            <h2 style="font-size: 16px; font-weight: 600; color: #475569; margin-top: 4px; font-family: sans-serif;">Complete Financial Statement Package</h2>
+            <p style="font-size: 13px; color: #64748b; margin-top: 4px; font-style: italic; font-family: sans-serif;">Reporting Period: ${reportingDate}</p>
+            <p style="font-size: 11px; color: #94a3b8; margin-top: 2px; font-family: sans-serif;">Generated on: ${new Date().toLocaleDateString()}</p>
+        </div>
+    `;
+
+    // 3. Target only the requested sections
+    const sectionsToGather = [
+        { id: 'section-translist', title: 'List of Ledger Transactions' },
+        { id: 'section-worksheet', title: 'Accounting 8-Column Worksheet' },
+        { id: 'section-statements', title: 'Core Financial Reports' }
+    ];
+
+    // 4. Extract structures into our rendering pipeline
+    sectionsToGather.forEach(item => {
+        const rawTarget = document.getElementById(item.id);
+        if (rawTarget) {
+            const blockWrapper = document.createElement('div');
+            blockWrapper.className = "pdf-report-section mb-8";
+            blockWrapper.innerHTML = `<h3 style="font-size: 14px; font-weight: bold; color: #334155; border-bottom: 1px solid #cbd5e1; padding-bottom: 4px; margin-bottom: 12px; text-transform: uppercase; font-family: sans-serif;">${item.title}</h3>`;
+            
+            // Clone elements out of the document
+            const displayClone = rawTarget.cloneNode(true);
+            
+            // Remove hidden classes so background tabs render accurately
+            displayClone.classList.remove('hidden');
+            
+            // Wipe forms, interactive settings panels, and control buttons from the PDF layout
+            displayClone.querySelectorAll('.no-print, button, input, select, .mb-6').forEach(el => {
+                if (el.id !== 'inputCompanyName' && el.id !== 'inputReportingDate') {
+                    el.style.display = 'none';
+                }
+            });
+            
+            blockWrapper.appendChild(displayClone);
+            element.appendChild(blockWrapper);
+            
+            // Inject structural page break points between views
+            const structuralBreak = document.createElement('div');
+            structuralBreak.className = "html2pdf__page-break";
+            element.appendChild(structuralBreak);
+        }
+    });
+
+    // 5. PDF generation configurations tailored for wide sheets
+    const pdfSettings = {
+        margin:       [0.4, 0.4, 0.4, 0.4], 
+        filename:     `${companyName.replace(/\s+/g, '_')}_Financials.pdf`,
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2, useCORS: true, logging: false },
+        jsPDF:        { unit: 'in', format: 'letter', orientation: 'landscape' }
+    };
+
+    // 6. Execute download window sequence
+    document.body.appendChild(element);
+    html2pdf().set(pdfSettings).from(element).save().then(() => {
+        document.body.removeChild(element);
+    }).catch(err => {
+        console.error("PDF Export Engine error:", err);
+        document.body.removeChild(element);
+    });
+}
+</script>
+</body>
+</html>
